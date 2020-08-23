@@ -1,0 +1,103 @@
+<p-toast position="top-right"></p-toast>
+
+<div class="form-locations">
+  <h2>Agregar una nueva Localización</h2>
+
+  <form [formGroup]="form" (ngSubmit)="createLocation($event)">
+    <div class="p-d-flex p-flex-column p-flex-md-row">
+      <div class="p-mb-2 p-mr-2">
+        <span class="p-float-label">
+          <input id="id" type="number" pInputText formControlName="id" aria-describedby="id-help" />
+          <label for="id">Id</label><br />
+          <small id="id-help" *ngIf="idField.hasError('exists_id')" class="p-invalid">Una localización ya existe con este ID</small>
+        </span>
+      </div>
+
+      <div class="p-mb-2 p-mr-2">
+        <span class="p-float-label">
+          <input id="name" type="text" pInputText formControlName="name" aria-describedby="name-help" />
+          <label for="name">Nombre</label><br />
+          <small id="name-help" *ngIf="nameField.hasError('exists_name')" class="p-invalid">Una localización ya existe con este Nombre</small>
+        </span>
+      </div>
+
+      <div class="p-mb-2 p-mr-2">
+        <span class="p-float-label">
+          <input id="area" type="number" pInputText formControlName="area" />
+          <label for="area">Area</label>
+        </span>
+      </div>
+
+      <div class="p-mb-2 p-mr-2">
+        <p-dropdown
+          [options]="locations"
+          formControlName="parent"
+          optionLabel="customName"
+          [filter]="true"
+          placeholder="Localización Padre"
+          emptyFilterMessage="No hay Locations creadas"
+          showClear="true"
+          [virtualScroll]="true"
+          itemSize="5"
+        ></p-dropdown>
+      </div>
+
+      <div class="p-mb-2 p-mr-2">
+        <button pButton type="button" label="Guardar" type="submit" [disabled]="form.invalid"></button>
+      </div>
+    </div>
+  </form>
+</div>
+<br />
+
+<div class="table-locations">
+  <h2>Lista de Localizaciones</h2>
+
+  <p-table
+    #dt
+    [value]="locations"
+    styleClass="p-datatable-sm"
+    [paginator]="true"
+    [rows]="10"
+    styleClass="p-datatable-gridlines"
+    responsive="true"
+    class="p-shadow-12"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Id</th>
+        <th>Nombre</th>
+        <th>Area</th>
+        <th>Padre</th>
+      </tr>
+      <tr>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'id', 'startsWith')" placeholder="Id" class="p-column-filter" />
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'name', 'startsWith')" placeholder="Nombre" class="p-column-filter" />
+        </th>
+        <th>
+          <input pInputText type="text" (input)="dt.filter($event.target.value, 'area', 'startsWith')" placeholder="Area" class="p-column-filter" />
+        </th>
+        <th>
+          <input
+            pInputText
+            type="text"
+            (input)="dt.filter($event.target.value, 'parent.name', 'startsWith')"
+            placeholder="Nombre"
+            class="p-column-filter"
+          />
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-loc>
+      <tr>
+        <td><span class="p-column-title">ID: </span>{{ loc.id }}</td>
+        <td><span class="p-column-title">Nombre: </span>{{ loc.name }}</td>
+        <td><span class="p-column-title">Area: </span>{{ loc.area }}</td>
+        <td><span class="p-column-title">Padre: </span> {{ loc.parent ? loc.parent.name : 'No tiene' }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
